@@ -71,6 +71,16 @@ php artisan serve
 
 ---
 
+## Assumptions & Notes
+
+- Orders are cancelled logically rather than physically deleted
+- Payment gateways are simulated, but the architecture supports real integrations
+- The focus of this implementation is backend logic and API design.
+- Products are not modeled as a separate entity, as the task focuses on order creation with purchased products snapshots (name, quantity, price) at the time of checkout.
+- The repository design pattern was intentionally omitted to avoid over-engineering, as the project scope is simple. The code is structured in a way that allows introducing repositories later if needed.
+---
+
+
 ## Authentication
 
 - Authentication is implemented using **JWT (JSON Web Tokens)**.
@@ -191,15 +201,6 @@ The application is designed to be easily testable:
 
 This structure allows straightforward implementation of unit and integration tests, especially for payment processing scenarios.
 
----
-
-## Assumptions & Notes
-
-- Orders are cancelled logically rather than physically deleted
-- Payment gateways are simulated, but the architecture supports real integrations
-- The focus of this implementation is backend logic and API design.
-- Products are not modeled as a separate entity, as the task focuses on order creation with purchased products snapshots (name, quantity, price) at the time of checkout.
-- The repository design pattern was intentionally omitted to avoid over-engineering, as the project scope is simple. The code is structured in a way that allows introducing repositories later if needed.
 ---
 
 ## Summary

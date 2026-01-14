@@ -1,0 +1,12 @@
+{
+    "User registered successfully": "User registered successfully",
+    "Order created successfully.": "Order created successfully.",
+    "Order updated successfully": "Order updated successfully",
+    "Payment processed": "Payment processed",
+    "Payment approved": "Payment approved",
+    "Payment completed": "Payment completed",
+    "Invalid credentials": "Invalid credentials",
+    "Only pending orders can be updated": "Only pending orders can be updated",
+    "Order with payments cannot be deleted": "Order with payments cannot be deleted",
+    "Order must be confirmed before payment": "Order must be confirmed before payment"
+}

@@ -1,59 +1,216 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Order & Payment Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository contains a Laravel-based RESTful API for managing **Orders** and **Payments**, designed with extensibility, clean architecture, and real-world business rules in mind.
 
-## About Laravel
+The project was implemented as part of a technical assessment and focuses on maintainability, clarity, and scalability rather than UI concerns.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Project Overview
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Core Features
+- JWT-based authentication (Register / Login)
+- Order management (create, update, view, cancel)
+- Payment processing with multiple gateways
+- Strict business rule enforcement
+- Clean and extensible architecture
+- Comprehensive API documentation using Postman
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Tech Stack
+- Laravel (API-focused)
+- JWT Authentication
+- MySQL
+- Postman (API Documentation)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Setup Instructions
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 1 Clone the Repository
+```bash
+git clone git@github.com:mohamedAhmed00/order-management.git
+cd order-management
+```
 
-### Premium Partners
+### 2 Install Dependencies
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 3 Environment Configuration
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Contributing
+Update the following in `.env`:
+```env
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+JWT_SECRET=your_jwt_secret
+```
 
-## Code of Conduct
+Generate JWT secret:
+```bash
+php artisan jwt:secret
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4 Run Migrations
+```bash
+php artisan migrate
+```
 
-## Security Vulnerabilities
+### 5 Start the Server
+```bash
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## Authentication
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Authentication is implemented using **JWT (JSON Web Tokens)**.
+- Users can register and login to receive a token.
+- All protected endpoints require a valid Bearer token.
+
+Example header:
+```
+Authorization: Bearer {token}
+```
+
+---
+
+## Orders Management
+
+### Features
+- Create orders with purchased items (name, quantity, price)
+- Automatically calculate total order amount
+- View all orders with pagination
+- Filter orders by status (`pending`, `confirmed`, `cancelled`)
+- View a single order with its associated payments
+- Update order details
+- Cancel orders (logical deletion)
+
+## **Order Cancellation**
+Orders are **not physically deleted** from the database.
+
+Calling the delete endpoint will:
+- Update the order status to `cancelled`
+- Preserve historical data for auditing and reporting
+
+Orders with associated payments **cannot be cancelled**.
+
+---
+
+## Payments Management
+
+### Features
+- Payments can only be processed for orders with status `confirmed`
+- Payment statuses:
+    - `pending`
+    - `successful`
+    - `failed`
+- View all payments with pagination
+- View payments related to a specific order
+
+---
+
+## Payment Gateway Extensibility
+
+Payment processing follows the **Strategy Pattern** to ensure easy extensibility.
+
+### Design
+- `PaymentGatewayInterface`
+- Individual gateway implementations (e.g., Credit Card, PayPal)
+- `PaymentGatewayFactory` responsible for resolving the correct gateway
+
+### Adding a New Payment Gateway
+1. Create a new gateway class implementing `PaymentGatewayInterface`
+2. Register the gateway in the factory or configuration
+3. No changes are required in the payment business logic
+
+This design ensures minimal code changes when adding new payment methods.
+
+---
+
+## Validation & Error Handling
+
+### Validation
+- All API inputs are validated using Laravel Form Request classes
+- Nested product validation is enforced only when products are provided
+
+### Error Handling
+- Business rule violations throw domain-level exceptions
+- Exceptions are mapped to appropriate HTTP status codes:
+    - `422 Unprocessable Entity` for business rule violations
+    - `401 Unauthorized` for authentication errors
+
+---
+
+## Pagination
+Pagination is implemented for:
+- Orders listing
+- Payments listing
+
+Standard Laravel pagination format is used.
+
+---
+
+## API Documentation (Postman)
+
+API documentation is provided using **Postman**.
+
+### Documentation Includes
+- Organized endpoints by functionality:
+    - Authentication
+    - Orders
+    - Payments
+- Detailed examples of:
+    - Successful responses
+    - Validation errors
+    - Business rule errors
+- JWT Bearer token configuration
+- Pagination examples
+
+ A Postman collection export file is included in the repository for easy import and testing.
+
+ In the root directory locate the `Order Management API.postman_collection.json` file. Import it into Postman to view the documentation.
+
+---
+
+## Testing
+
+The application is designed to be easily testable:
+- Business logic is isolated in service classes
+- Payment gateway logic is abstracted via interfaces
+- Gateways can be tested independently using mocks
+
+This structure allows straightforward implementation of unit and integration tests, especially for payment processing scenarios.
+
+---
+
+## Assumptions & Notes
+
+- Orders are cancelled logically rather than physically deleted
+- Payment gateways are simulated, but the architecture supports real integrations
+- The focus of this implementation is backend logic and API design.
+- Products are not modeled as a separate entity, as the task focuses on order creation with purchased products snapshots (name, quantity, price) at the time of checkout.
+---
+
+## Summary
+
+This project demonstrates:
+- Proper RESTful API design
+- Clean and maintainable code
+- Strong separation of concerns
+- Extensible payment processing architecture
+- Clear and complete documentation
+
+The solution is production-oriented and designed to scale with future business requirements.
+
+
+

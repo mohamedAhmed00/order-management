@@ -199,6 +199,7 @@ This structure allows straightforward implementation of unit and integration tes
 - Payment gateways are simulated, but the architecture supports real integrations
 - The focus of this implementation is backend logic and API design.
 - Products are not modeled as a separate entity, as the task focuses on order creation with purchased products snapshots (name, quantity, price) at the time of checkout.
+- The repository design pattern was intentionally omitted to avoid over-engineering, as the project scope is simple. The code is structured in a way that allows introducing repositories later if needed.
 ---
 
 ## Summary

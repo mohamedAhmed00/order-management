@@ -2,15 +2,9 @@
 
 namespace App\Services\Classes;
 
-use App\Enums\OrderStatus;
-use App\Factories\PaymentGatewayFactory;
-use App\Models\Order;
-use App\Models\Payment;
 use App\Models\User;
 use App\Services\Contract\IAuthInterface;
-use App\Services\Contract\IPaymentInterface;
 use DomainException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService implements IAuthInterface
@@ -22,6 +16,7 @@ class AuthService implements IAuthInterface
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
         return auth()->login($user);
     }
 

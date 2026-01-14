@@ -3,7 +3,6 @@
 namespace Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LoginTest
 {
@@ -18,5 +17,4 @@ class LoginTest
         ]);
         $response->assertStatus(200)->assertJsonStructure(['token']);
     }
-
 }

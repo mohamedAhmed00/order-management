@@ -19,7 +19,7 @@ class PaymentTest extends TestCase
         $order = Order::factory()->create(['status' => 'confirmed']);
         $response = $this->actingAs($this->user, 'api')
             ->postJson("/api/orders/{$order->id}/payments", [
-                'method' => 'credit_card'
+                'method' => 'credit_card',
             ]);
         $response->assertStatus(201);
         $this->assertDatabaseHas('payments', [

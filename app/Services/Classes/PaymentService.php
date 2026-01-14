@@ -21,6 +21,7 @@ class PaymentService implements IPaymentInterface
             $q->where('user_id', $userID);
         })->latest()->paginate(10);
     }
+
     public function pay(Order $order, string $method): Payment
     {
         if ($order->status !== OrderStatus::CONFIRMED) {
@@ -28,7 +29,7 @@ class PaymentService implements IPaymentInterface
         }
 
         $gateway = $this->factory->make($method);
-        $result  = $gateway->pay($order);
+        $result = $gateway->pay($order);
 
         return $order->payments()->create([
             'method' => $method,

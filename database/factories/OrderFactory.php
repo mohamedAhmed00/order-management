@@ -18,10 +18,11 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         $user = User::first();
+
         return [
             'user_id' => $user->id,
             'total_amount' => 10000,
-            'order_number' => 'ORD-123456789' . time(),
+            'order_number' => 'ORD-123456789'.time(),
             'status' => 'pending',
         ];
     }

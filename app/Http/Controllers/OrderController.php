@@ -11,10 +11,7 @@ use Illuminate\Http\JsonResponse;
 
 class OrderController extends Controller
 {
-
-    public function __construct(private readonly IOrderInterface $orderService)
-    {
-    }
+    public function __construct(private readonly IOrderInterface $orderService) {}
 
     public function index()
     {
@@ -24,6 +21,7 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $order = $this->orderService->create($request->validated()['products'], $request->user()->id);
+
         return response()->json([
             'message' => __('Order created successfully.'),
             'data' => new OrderResource($order),
@@ -33,12 +31,14 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order->load(['products', 'payments']);
+
         return new OrderResource($order);
     }
 
     public function update(UpdateOrderRequest $request, Order $order): JsonResponse
     {
         $order = $this->orderService->update($order, $request->validated());
+
         return response()->json([
             'message' => __('Order updated successfully'),
             'data' => new OrderResource($order),
@@ -48,6 +48,7 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         $this->orderService->delete($order);
+
         return response()->json(null, 204);
     }
 }

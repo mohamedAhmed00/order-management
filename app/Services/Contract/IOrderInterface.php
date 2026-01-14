@@ -13,5 +13,4 @@ interface IOrderInterface
     public function update(Order $order, array $data);
 
     public function delete(Order $order);
-
 }

@@ -11,7 +11,6 @@ use Illuminate\Support\Str;
 
 class OrderService implements IOrderInterface
 {
-
     public function getAll(int $userId, $request)
     {
         $query = Order::where('user_id', $userId);
@@ -44,13 +43,9 @@ class OrderService implements IOrderInterface
             $order->update([
                 'total_amount' => number_format($totalAmount, 2, '.', ''),
             ]);
+
             return $order->load('products');
         });
-    }
-
-    private function generateOrderNumber(): string
-    {
-        return 'ORD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
     }
 
     public function update(Order $order, array $data): Order
@@ -77,6 +72,7 @@ class OrderService implements IOrderInterface
                 'status' => $data['status'],
                 'total_amount' => $totalAmount,
             ]);
+
             return $order->load('products');
         });
     }
@@ -89,5 +85,10 @@ class OrderService implements IOrderInterface
         $order->update([
             'status' => OrderStatus::CANCELLED->value,
         ]);
+    }
+
+    private function generateOrderNumber(): string
+    {
+        return 'ORD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
     }
 }

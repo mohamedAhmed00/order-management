@@ -8,7 +8,6 @@ use App\Services\Contract\IPaymentGateway;
 
 class Paypal implements IPaymentGateway
 {
-
     public function pay(Order $order)
     {
         return new PaymentResultDTO(
@@ -16,7 +15,7 @@ class Paypal implements IPaymentGateway
             transactionReference: 'PayPal-' . uniqid(),
             response: [
                 'provider' => 'paypal',
-                'message' => 'Payment completed'
+                'message' => 'Payment completed',
             ]
         );
     }

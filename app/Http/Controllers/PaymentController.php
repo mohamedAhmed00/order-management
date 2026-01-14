@@ -9,9 +9,8 @@ use App\Services\Contract\IPaymentInterface;
 
 class PaymentController extends Controller
 {
-    public function __construct(private readonly IPaymentInterface $paymentService)
-    {
-    }
+    public function __construct(private readonly IPaymentInterface $paymentService) {}
+
     public function index()
     {
         return PaymentResource::collection($this->paymentService->getAll(auth()->id()));
